@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.example.money_lover_backend.models.category.Category;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -62,8 +63,10 @@ public class User {
     @Setter
     private String activeToken;
 
-
     private boolean isActive;
+
+    @OneToMany(mappedBy = "user")
+    private List<Category> Categories;
 
     public boolean isActive() {
         return isActive;
