@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -53,5 +55,16 @@ public class WalletController {
     public ResponseEntity<?> searchWalletByName(@RequestParam String nameWallet) {
         List<Wallet> wallets = walletService.searchWalletByName(nameWallet);
         return new ResponseEntity<>(wallets, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/add-money")
+    public ResponseEntity<?> addMoneyToWallet(@RequestBody Map<String, Long> moneyMap, @PathVariable Long id) {
+        Long moneyToAdd = moneyMap.get("money");
+        try {
+            Optional<Wallet> wallet = walletService.addMoneyToWallet(id, moneyToAdd);
+            return new ResponseEntity<>(wallet, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to add money to wallet", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

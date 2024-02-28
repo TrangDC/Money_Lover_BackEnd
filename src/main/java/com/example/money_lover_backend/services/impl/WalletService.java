@@ -14,6 +14,7 @@ import java.util.Optional;
 public class WalletService implements IWaletService {
     @Autowired
     private WalletRepository walletRepository;
+
     @Override
     public Wallet saveWallet(Wallet wallet) {
         return walletRepository.save(wallet);
@@ -24,6 +25,7 @@ public class WalletService implements IWaletService {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         return walletRepository.findAll(sort);
     }
+
     @Override
     public List<Wallet> searchWalletByName(String walletName) {
         return walletRepository.findByNameContainingIgnoreCase(walletName);
@@ -44,6 +46,18 @@ public class WalletService implements IWaletService {
         }
         return "Something wrong on server";
     }
+
+    @Override
+    public Optional<Wallet> addMoneyToWallet(Long walletId, Long moneyToAdd) {
+        Wallet wallet = walletRepository.findById(walletId).get();
+        Long currentBalance = wallet.getBalance();
+        Long newBalance = currentBalance + moneyToAdd;
+
+        wallet.setBalance(newBalance);
+
+        return Optional.of(walletRepository.save(wallet));
+    }
+
 
     @Override
     public Wallet editWallet(Wallet wallet, Long id) {

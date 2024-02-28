@@ -17,5 +17,7 @@ public interface IWaletService{
 
     public String deleteWallet(Long id);
 
-    public Wallet editWallet(Wallet wallet,Long id);
+    Optional<Wallet> addMoneyToWallet(Long walletId, Long moneyToAdd);
+
+    public Wallet editWallet(Wallet wallet, Long id);
 }
