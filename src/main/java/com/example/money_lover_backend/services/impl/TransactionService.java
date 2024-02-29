@@ -1,6 +1,7 @@
 package com.example.money_lover_backend.services.impl;
 
 import com.example.money_lover_backend.models.Transaction;
+import com.example.money_lover_backend.models.Wallet;
 import com.example.money_lover_backend.repositories.TransactionRepository;
 import com.example.money_lover_backend.services.ITransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
