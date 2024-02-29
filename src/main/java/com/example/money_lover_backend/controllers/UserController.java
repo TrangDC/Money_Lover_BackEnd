@@ -1,6 +1,7 @@
 package com.example.money_lover_backend.controllers;
 import com.example.money_lover_backend.dto.UserImage;
 import com.example.money_lover_backend.models.User;
+import com.example.money_lover_backend.models.category.Category;
 import com.example.money_lover_backend.payload.request.ChangePassword;
 import com.example.money_lover_backend.payload.request.EditUser;
 import com.example.money_lover_backend.payload.response.MessageResponse;
@@ -115,4 +116,5 @@ public class UserController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
 }
