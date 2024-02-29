@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
@@ -16,8 +17,19 @@ import java.sql.Timestamp;
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "transaction_id")
     private int id;
+
+    private Long amount;
+
+    private String note;
+
+    private LocalDate transactionDate;
+
+    private LocalDate endDate;
+
+    private String lender;
+
+    private String borrower;
 
     @ManyToOne
     @JoinColumn(name = "wallet_id")
@@ -26,13 +38,5 @@ public class Transaction {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-
-    private BigDecimal amount;
-    private String note;
-    private Timestamp transactionDate;
-
-    private String lender;
-    private String borrower;
-
 }
 
