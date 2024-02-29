@@ -6,6 +6,7 @@ import com.example.money_lover_backend.models.Role;
 import com.example.money_lover_backend.models.User;
 import com.example.money_lover_backend.payload.request.ChangePassword;
 import com.example.money_lover_backend.payload.request.EditUser;
+import com.example.money_lover_backend.payload.request.GoogleLogin;
 import com.example.money_lover_backend.payload.response.MessageResponse;
 import com.example.money_lover_backend.repositories.RoleRepository;
 import com.example.money_lover_backend.repositories.UserRepository;
@@ -119,5 +120,16 @@ public class UserController {
             return new ResponseEntity<>("changePassword success !", HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping("/google")
+    public ResponseEntity<?> googleLogin(@RequestBody GoogleLogin googleLogin) {
+        String emails = googleLogin.getEmails();
+        Optional<User> userOptional = userRepository.findByEmail(emails);
+        if (!userOptional.isPresent()) {
+            return new ResponseEntity<String>("User not found", HttpStatus.NOT_FOUND);
+        }
+        User user = userOptional.get();
+        return new ResponseEntity<String>(user.getDecode_password(), HttpStatus.OK);
     }
 }
