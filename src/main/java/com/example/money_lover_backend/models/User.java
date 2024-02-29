@@ -65,8 +65,6 @@ public class User {
 
     private boolean isActive;
 
-    @OneToMany(mappedBy = "user")
-    private List<Category> Categories;
 
     public boolean isActive() {
         return isActive;

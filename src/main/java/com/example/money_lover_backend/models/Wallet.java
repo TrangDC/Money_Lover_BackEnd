@@ -40,12 +40,7 @@ public class Wallet {
     public void setBalance(Long balance) {
         this.balance = balance;
     }
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id")
-//    private User user;
 
-    @OneToMany(mappedBy = "wallet")
-    private List<Transaction> transactions;
 
     @ManyToMany
     @JoinTable(

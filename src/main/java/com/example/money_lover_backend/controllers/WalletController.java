@@ -1,5 +1,4 @@
 package com.example.money_lover_backend.controllers;
-
 import com.example.money_lover_backend.models.User;
 import com.example.money_lover_backend.models.Wallet;
 import com.example.money_lover_backend.repositories.UserRepository;
@@ -7,12 +6,8 @@ import com.example.money_lover_backend.services.impl.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -72,7 +67,6 @@ public class WalletController {
 //            return new ResponseEntity<>("Failed to add money to wallet", HttpStatus.INTERNAL_SERVER_ERROR);
 //        }
 //    }
-
 
 
     // API gọi danh sách ví của 1 user
@@ -164,5 +158,4 @@ public class WalletController {
         }
         return new ResponseEntity<String>("Wallet not found", HttpStatus.NOT_FOUND);
     }
-
 }
