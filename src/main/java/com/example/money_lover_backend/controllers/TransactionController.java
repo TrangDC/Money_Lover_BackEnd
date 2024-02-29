@@ -38,12 +38,12 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<Transaction> saveCustomer(@RequestBody Transaction transaction) {
+    public ResponseEntity<Transaction> saveTransaction(@RequestBody Transaction transaction) {
         return new ResponseEntity<>(transactionService.save(transaction), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Transaction> updateCustomer(@PathVariable Long id, @RequestBody Transaction transaction) {
+    public ResponseEntity<Transaction> updateTransaction(@PathVariable Long id, @RequestBody Transaction transaction) {
         Optional<Transaction> transactionOptional = transactionService.findById(id);
         if (!transactionOptional.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -53,7 +53,7 @@ public class TransactionController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Transaction> deleteCustomer(@PathVariable Long id) {
+    public ResponseEntity<Transaction> deleteTransaction(@PathVariable Long id) {
         Optional<Transaction> transactionOptional = transactionService.findById(id);
         if (!transactionOptional.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

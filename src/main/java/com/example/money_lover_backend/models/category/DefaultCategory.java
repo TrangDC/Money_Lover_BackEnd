@@ -1,7 +1,6 @@
 package com.example.money_lover_backend.models.category;
 
 import com.example.money_lover_backend.enums.Type;
-import com.example.money_lover_backend.models.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,16 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Category {
+public class DefaultCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private int id;
     private String name;
-
-    private String image;
 
     @Enumerated(EnumType.STRING)
     private Type type;
-
 }
