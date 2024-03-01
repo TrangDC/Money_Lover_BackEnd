@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.example.money_lover_backend.models.User;
+import com.example.money_lover_backend.models.Wallet;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,6 +28,8 @@ public class UserDetailsImpl implements UserDetails {
 
     @JsonIgnore
     private String password;
+
+    private List<Wallet> wallets;
 
     private Collection<? extends GrantedAuthority> authorities;
 

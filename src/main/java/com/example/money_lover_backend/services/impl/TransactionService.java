@@ -32,8 +32,4 @@ public class TransactionService implements ITransactionService {
         transactionRepository.deleteById(id);
     }
 
-    @Override
-    public Iterable<Transaction> findAllByWallet(Wallet wallet) {
-        return transactionRepository.findAllByWallet(wallet);
-    }
 }

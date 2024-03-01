@@ -19,13 +19,13 @@ public class Transaction {
     @Column(name = "transaction_id")
     private int id;
 
-    @ManyToOne
-    @JoinColumn(name = "wallet_id")
-    private Wallet wallet;
+//    @ManyToOne
+//    @JoinColumn(name = "wallet_id")
+//    private Wallet wallet;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+//    @ManyToOne
+//    @JoinColumn(name = "category_id")
+//    private Category category;
 
     private BigDecimal amount;
     private String note;
