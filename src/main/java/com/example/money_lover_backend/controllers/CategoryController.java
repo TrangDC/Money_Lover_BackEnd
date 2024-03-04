@@ -1,5 +1,4 @@
 package com.example.money_lover_backend.controllers;
-
 import com.example.money_lover_backend.models.User;
 import com.example.money_lover_backend.models.category.Category;
 import com.example.money_lover_backend.repositories.UserRepository;
