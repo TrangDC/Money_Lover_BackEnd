@@ -56,6 +56,7 @@ public class CategoryService implements ICategoryService {
         Category category = new Category();
         category.setName(defaultCategory.getName());
         category.setType(defaultCategory.getType());
+        category.setImage(defaultCategory.getImage());
 
         return category;
     }
