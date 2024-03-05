@@ -7,6 +7,7 @@ import com.example.money_lover_backend.models.Wallet;
 import com.example.money_lover_backend.models.category.Category;
 import com.example.money_lover_backend.payload.request.CreateTransaction;
 import com.example.money_lover_backend.payload.response.MessageResponse;
+import com.example.money_lover_backend.repositories.TransactionRepository;
 import com.example.money_lover_backend.repositories.UserRepository;
 import com.example.money_lover_backend.repositories.WalletRepository;
 import com.example.money_lover_backend.services.ICategoryService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +41,8 @@ public class TransactionController {
 
     @Autowired
     private ICategoryService categoryService;
+    @Autowired
+    private TransactionRepository transactionRepository;
 
     @GetMapping
     public ResponseEntity<Iterable<Transaction>> findAll() {
@@ -47,6 +51,37 @@ public class TransactionController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(transactions, HttpStatus.OK);
+    }
+
+    // API Lấy danh sach giao dịch thuộc loại income theo ví hoặc tất cả
+    @GetMapping("/user/{user_id}/income_transaction/{wallet_id}")
+    public ResponseEntity<?> findAllIncomeTransactions(@PathVariable String user_id,
+                                                       @PathVariable String wallet_id){
+        Optional<User> userOptional = userService.findById(Long.valueOf(user_id));
+        if (userOptional.isEmpty()) {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
+        // nếu wallet_id là all thì lấy tất cả giao dich
+        if (wallet_id.equals("all")) {
+            List<Transaction> userTransaction = userOptional.get().getTransactions();
+            return new ResponseEntity<>(userTransaction, HttpStatus.OK);
+        }
+        //tìm ví theo id
+        Optional<Wallet> walletOptional = walletRepository.findById(Long.valueOf(wallet_id));
+        if (walletOptional.isEmpty()) {
+            return new ResponseEntity<>("Wallet not found", HttpStatus.NOT_FOUND);
+        }
+        //tìm danh sach giao dịch theo ví
+        List<Transaction> transactionList = transactionRepository.findByWallet(walletOptional.get());
+        List<Transaction> incomeTransactionList = new ArrayList<>();
+        for (Transaction transaction:transactionList) {
+            String type = String.valueOf(transaction.getCategory().getType());
+            if (type.equals("INCOME")) {
+                incomeTransactionList.add(transaction);
+            }
+        }
+
+        return new ResponseEntity<>(incomeTransactionList, HttpStatus.OK);
     }
 
     //API hiển thị danh sách giao dịch theo user
