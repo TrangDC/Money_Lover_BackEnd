@@ -19,8 +19,6 @@ public class Category {
     private String image;
     private String name;
 
-    private String image;
-
     @Enumerated(EnumType.STRING)
     private Type type;
 

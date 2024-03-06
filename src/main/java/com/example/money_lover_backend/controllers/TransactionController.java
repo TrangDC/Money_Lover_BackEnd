@@ -84,6 +84,37 @@ public class TransactionController {
         return new ResponseEntity<>(incomeTransactionList, HttpStatus.OK);
     }
 
+    // API Lấy danh sach giao dịch thuộc loại EXPENSE theo ví hoặc tất cả
+    @GetMapping("/user/{user_id}/expense_transaction/{wallet_id}")
+    public ResponseEntity<?> findAllExpenseTransactions(@PathVariable String user_id,
+                                                       @PathVariable String wallet_id){
+        Optional<User> userOptional = userService.findById(Long.valueOf(user_id));
+        if (userOptional.isEmpty()) {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
+        // nếu wallet_id là all thì lấy tất cả giao dich
+        if (wallet_id.equals("all")) {
+            List<Transaction> userTransaction = userOptional.get().getTransactions();
+            return new ResponseEntity<>(userTransaction, HttpStatus.OK);
+        }
+        //tìm ví theo id
+        Optional<Wallet> walletOptional = walletRepository.findById(Long.valueOf(wallet_id));
+        if (walletOptional.isEmpty()) {
+            return new ResponseEntity<>("Wallet not found", HttpStatus.NOT_FOUND);
+        }
+        //tìm danh sach giao dịch theo ví
+        List<Transaction> transactionList = transactionRepository.findByWallet(walletOptional.get());
+        List<Transaction> incomeTransactionList = new ArrayList<>();
+        for (Transaction transaction:transactionList) {
+            String type = String.valueOf(transaction.getCategory().getType());
+            if (type.equals("EXPENSE")) {
+                incomeTransactionList.add(transaction);
+            }
+        }
+
+        return new ResponseEntity<>(incomeTransactionList, HttpStatus.OK);
+    }
+
     //API hiển thị danh sách giao dịch theo user
     @GetMapping("/user/{user_id}")
     public ResponseEntity<Iterable<Transaction>> findAll(@PathVariable Long user_id) {

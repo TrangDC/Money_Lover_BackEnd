@@ -1,6 +1,7 @@
 package com.example.money_lover_backend.repositories;
 
 import com.example.money_lover_backend.models.Transaction;
+import com.example.money_lover_backend.models.Wallet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
