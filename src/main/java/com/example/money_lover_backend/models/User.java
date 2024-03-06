@@ -54,6 +54,18 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(  name = "user_categories",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private List<Category> categories = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinTable(  name = "user_transactions",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "transaction_id"))
+    private List<Transaction> transactions = new ArrayList<>();
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wallet> wallets = new ArrayList<>();
 
@@ -64,8 +76,7 @@ public class User {
 
     private boolean isActive;
 
-    @OneToMany(mappedBy = "user")
-    private List<Category> Categories;
+
 
     public boolean isActive() {
         return isActive;
@@ -84,8 +95,17 @@ public class User {
         this.password = password;
         this.decode_password = decode_password;
         this.isActive = false;
+
     }
 
+    public User(String username, String email, String password, String decode_password, List<Category> categories, List<Wallet> wallets) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.decode_password = decode_password;
+        this.categories = categories;
+        this.wallets = wallets;
+    }
 
     public User(String email, String password) {
         this.username = username;
@@ -112,5 +132,13 @@ public class User {
         this.email = email;
         this.password = password;
         this.wallets = wallets;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
     }
 }
