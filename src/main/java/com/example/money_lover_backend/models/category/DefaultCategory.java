@@ -16,10 +16,8 @@ public class DefaultCategory {
     private int id;
 
     private String name;
+    private String image;
 
     @Enumerated(EnumType.STRING)
     private Type type;
-
-    private String image;
-
 }

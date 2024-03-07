@@ -98,6 +98,37 @@ public class AuthController {
         return new ResponseEntity<>("No user were found", HttpStatus.NOT_FOUND);
     }
 
+    @PostMapping("/google_signin")
+    public ResponseEntity<?> authenticateGGUser(@Valid @RequestBody LoginRequest loginRequest) {
+
+        Optional<User> userOptional = userRepository.findByEmail(loginRequest.getEmail());
+        if (!userOptional.isPresent()) {
+            throw new UsernameNotFoundException("User not found with email: " + loginRequest.getEmail());
+        }
+        if (userOptional.isPresent() && userOptional.get().isActive()) {
+            User user = userOptional.get();
+
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getDecode_password()));
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtUtils.generateJwtToken(authentication);
+
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            List<String> roles = userDetails.getAuthorities().stream()
+                    .map(item -> item.getAuthority())
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(new JwtResponse(jwt,
+                    userDetails.getId(),
+                    userDetails.getUsername(),
+                    userDetails.getEmail(),
+                    userDetails.getImage(),
+                    roles));
+        }
+        return new ResponseEntity<>("No user were found", HttpStatus.NOT_FOUND);
+    }
+
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
@@ -124,9 +155,8 @@ public class AuthController {
         default_wallet.setBalance(0L);
         List<Category> active_categories = new ArrayList<>();
         default_wallet.setActiveCategories(active_categories);
-
+        wallets.add(default_wallet);
         Iterable<Category> categories = categoryService.createDefaultCategories();
-
         User user = new User(
                 username,
                 signUpRequest.getEmail(),
@@ -135,6 +165,7 @@ public class AuthController {
                 (List<Category>) categories,
                 wallets
         );
+        user.setWallets(wallets);
 
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
@@ -164,6 +195,7 @@ public class AuthController {
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
+
 
     @PostMapping("/logout")
     public ResponseEntity<?> logOut(@RequestBody TokenExpire tokenExpire) {
@@ -199,7 +231,7 @@ public class AuthController {
     @GetMapping("/active_account/{email}")
     public ResponseEntity<?> processActiveAccount(@PathVariable String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
-        if (!userOptional.isPresent()) {
+        if (userOptional.isEmpty()) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Email not found!"));
@@ -229,5 +261,6 @@ public class AuthController {
         return new ResponseEntity<>("Email has been sent", HttpStatus.OK);
 
     }
+
 
 }

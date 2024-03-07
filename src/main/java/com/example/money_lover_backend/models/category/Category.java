@@ -16,10 +16,10 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    private String image;
     private String name;
 
     @Enumerated(EnumType.STRING)
     private Type type;
 
-    private String image;
 }
