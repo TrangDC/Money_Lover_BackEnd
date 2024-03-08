@@ -64,7 +64,14 @@ public class TransactionController {
         // nếu wallet_id là all thì lấy tất cả giao dich
         if (wallet_id.equals("all")) {
             List<Transaction> userTransaction = userOptional.get().getTransactions();
-            return new ResponseEntity<>(userTransaction, HttpStatus.OK);
+            List<Transaction> incomeTransactionList = new ArrayList<>();
+            for (Transaction transaction:userTransaction) {
+                String type = String.valueOf(transaction.getCategory().getType());
+                if (type.equals("INCOME")) {
+                    incomeTransactionList.add(transaction);
+                }
+            }
+            return new ResponseEntity<>(incomeTransactionList, HttpStatus.OK);
         }
         //tìm ví theo id
         Optional<Wallet> walletOptional = walletRepository.findById(Long.valueOf(wallet_id));
@@ -95,7 +102,14 @@ public class TransactionController {
         // nếu wallet_id là all thì lấy tất cả giao dich
         if (wallet_id.equals("all")) {
             List<Transaction> userTransaction = userOptional.get().getTransactions();
-            return new ResponseEntity<>(userTransaction, HttpStatus.OK);
+            List<Transaction> expenseTransactionList = new ArrayList<>();
+            for (Transaction transaction:userTransaction) {
+                String type = String.valueOf(transaction.getCategory().getType());
+                if (type.equals("EXPENSE")) {
+                    expenseTransactionList.add(transaction);
+                }
+            }
+            return new ResponseEntity<>(expenseTransactionList, HttpStatus.OK);
         }
         //tìm ví theo id
         Optional<Wallet> walletOptional = walletRepository.findById(Long.valueOf(wallet_id));
@@ -528,7 +542,29 @@ public class TransactionController {
         // nếu wallet_id là all thì lấy tất cả giao dich
         if (wallet_id.equals("all")) {
             List<Transaction> userTransaction = userOptional.get().getTransactions();
-            return new ResponseEntity<>(userTransaction, HttpStatus.OK);
+            List<Transaction> incomeTransactions = new ArrayList<>();
+            for (Transaction transaction: userTransaction) {
+                String type = String.valueOf(transaction.getCategory().getType());
+                if (type.equals("INCOME")) {
+                    incomeTransactions.add(transaction);
+                }
+            }
+            int month = Integer.parseInt(monthIndex) + 1;
+            LocalDate startDate = LocalDate.of(Integer.parseInt(year), month, 1);
+            LocalDate endDate = startDate.plusMonths(1).minusDays(1);
+
+            List<Transaction> transactions = transactionRepository.findAllByTransactionDateBetween(startDate, endDate);
+            List<Transaction> result = new ArrayList<>();
+
+            for (Transaction transaction : transactions) {
+                if (userTransaction.contains(transaction) && incomeTransactions.contains(transaction)) {
+                    result.add(transaction);
+                }
+            }
+            if (result.isEmpty()) {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(result, HttpStatus.OK);
         }
         //tìm ví theo id
         Optional<Wallet> walletOptional = walletRepository.findById(Long.valueOf(wallet_id));
@@ -551,13 +587,84 @@ public class TransactionController {
         List<Transaction> transactions = transactionRepository.findAllByTransactionDateBetween(startDate, endDate);
         List<Transaction> userTransactions = userOptional.get().getTransactions();
         List<Transaction> result = new ArrayList<>();
+
         for (Transaction transaction : transactions) {
             if (userTransactions.contains(transaction) && incomeTransactionList.contains(transaction)) {
                 result.add(transaction);
             }
         }
         if (result.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    //Lấy danh sách giao dịch expense theo tháng năm hiện tại và ví
+    @GetMapping("/user/{user_id}/expense_transaction/{wallet_id}/date/{year}/{monthIndex}")
+    public ResponseEntity<?> findExpenseTransactionsByWalletAndDate(@PathVariable String user_id,
+                                                                   @PathVariable String wallet_id,
+                                                                   @PathVariable String year,
+                                                                   @PathVariable String monthIndex){
+        Optional<User> userOptional = userService.findById(Long.valueOf(user_id));
+        if (userOptional.isEmpty()) {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
+        // nếu wallet_id là all thì lấy tất cả giao dich
+        if (wallet_id.equals("all")) {
+            List<Transaction> userTransaction = userOptional.get().getTransactions();
+            List<Transaction> incomeTransactions = new ArrayList<>();
+            for (Transaction transaction: userTransaction) {
+                String type = String.valueOf(transaction.getCategory().getType());
+                if (type.equals("EXPENSE")) {
+                    incomeTransactions.add(transaction);
+                }
+            }
+            int month = Integer.parseInt(monthIndex) + 1;
+            LocalDate startDate = LocalDate.of(Integer.parseInt(year), month, 1);
+            LocalDate endDate = startDate.plusMonths(1).minusDays(1);
+
+            List<Transaction> transactions = transactionRepository.findAllByTransactionDateBetween(startDate, endDate);
+            List<Transaction> result = new ArrayList<>();
+
+            for (Transaction transaction : transactions) {
+                if (userTransaction.contains(transaction) && incomeTransactions.contains(transaction)) {
+                    result.add(transaction);
+                }
+            }
+            if (result.isEmpty()) {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        //tìm ví theo id
+        Optional<Wallet> walletOptional = walletRepository.findById(Long.valueOf(wallet_id));
+        if (walletOptional.isEmpty()) {
+            return new ResponseEntity<>("Wallet not found", HttpStatus.NOT_FOUND);
+        }
+        //tìm danh sach giao dịch theo ví
+        List<Transaction> transactionList = transactionRepository.findByWallet(walletOptional.get());
+        List<Transaction> incomeTransactionList = new ArrayList<>();
+        for (Transaction transaction:transactionList) {
+            String type = String.valueOf(transaction.getCategory().getType());
+            if (type.equals("EXPENSE")) {
+                incomeTransactionList.add(transaction);
+            }
+        }
+        int month = Integer.parseInt(monthIndex) + 1;
+        LocalDate startDate = LocalDate.of(Integer.parseInt(year), month, 1);
+        LocalDate endDate = startDate.plusMonths(1).minusDays(1);
+
+        List<Transaction> transactions = transactionRepository.findAllByTransactionDateBetween(startDate, endDate);
+        List<Transaction> userTransactions = userOptional.get().getTransactions();
+        List<Transaction> result = new ArrayList<>();
+
+        for (Transaction transaction : transactions) {
+            if (userTransactions.contains(transaction) && incomeTransactionList.contains(transaction)) {
+                result.add(transaction);
+            }
+        }
+        if (result.isEmpty()) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
