@@ -1,8 +1,5 @@
 package com.example.money_lover_backend.controllers;
-
 import com.example.money_lover_backend.dto.UserImage;
-import com.example.money_lover_backend.enums.ERole;
-import com.example.money_lover_backend.models.Role;
 import com.example.money_lover_backend.models.User;
 import com.example.money_lover_backend.models.category.Category;
 import com.example.money_lover_backend.payload.request.ChangePassword;
@@ -15,10 +12,8 @@ import com.example.money_lover_backend.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.*;
 
 @RestController

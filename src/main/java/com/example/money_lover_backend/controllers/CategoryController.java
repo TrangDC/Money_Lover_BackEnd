@@ -1,5 +1,4 @@
 package com.example.money_lover_backend.controllers;
-
 import com.example.money_lover_backend.models.User;
 import com.example.money_lover_backend.models.category.Category;
 import com.example.money_lover_backend.repositories.UserRepository;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 

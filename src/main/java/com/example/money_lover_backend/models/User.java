@@ -55,6 +55,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(  name = "user_categories",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -76,15 +77,16 @@ public class User {
     private String activeToken;
 
     private boolean isActive;
-
-
-
     public boolean isActive() {
         return isActive;
     }
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public void setWallets(List<Wallet> wallets) {
+        this.wallets = wallets;
     }
 
     public User() {

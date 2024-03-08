@@ -227,7 +227,6 @@ public class AuthController {
 
     }
 
-
     @GetMapping("/active_account/{email}")
     public ResponseEntity<?> processActiveAccount(@PathVariable String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
@@ -261,6 +260,5 @@ public class AuthController {
         return new ResponseEntity<>("Email has been sent", HttpStatus.OK);
 
     }
-
-
 }
+
