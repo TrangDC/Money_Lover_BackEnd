@@ -8,4 +8,6 @@ import java.time.LocalDate;
 public class FindByWeek {
     private LocalDate startWeek;
     private LocalDate endWeek;
+
 }
+

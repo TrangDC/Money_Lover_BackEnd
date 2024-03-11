@@ -12,10 +12,14 @@ import java.util.List;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction,Long> {
     List<Transaction> findByNoteContainingIgnoreCase (String text);
-
     List<Transaction> findByWallet(Wallet wallet);
+
+    List<Transaction> findAllByWalletAndTransactionDateBetween(Wallet wallet, LocalDate start, LocalDate end);
+
+    List<Transaction> findAllByWalletAndCategoryAndTransactionDateBetween(Wallet wallet, Category category, LocalDate start, LocalDate end);
 
     List<Transaction> findAllByTransactionDateBetween(LocalDate start, LocalDate end);
 
     List<Transaction> findAllByTransactionDate(LocalDate date);
+
 }
