@@ -22,9 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -591,6 +589,22 @@ public class TransactionController {
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+//API báo cáo thu chi và thống kê
+    @GetMapping("user/")
+    public ResponseEntity<List<Transaction>> getTransactionsReport() {
+        List<Transaction> transactions = transactionRepository.findAll();
+        return ResponseEntity.ok().body(transactions);
+    }
+
+    @GetMapping("/statistics")
+    public ResponseEntity<Map<String, Double>> getStatistics() {
+        Map<String, Double> statistics = new HashMap<>();
+
+        Double totalExpense = transactionRepository.getTotalExpense();
+        statistics.put("totalExpense", totalExpense);
+
+        return ResponseEntity.ok().body(statistics);
     }
 
     // lấy danh sách giao dịch income theo khoảng thời gian
