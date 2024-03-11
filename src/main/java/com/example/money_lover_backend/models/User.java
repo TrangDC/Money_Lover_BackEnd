@@ -55,7 +55,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(  name = "user_categories",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -71,22 +70,25 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wallet> wallets = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Budget> budgets = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notification> notifications = new ArrayList<>();
+
     @Column(name = "active_token")
     @Getter
     @Setter
     private String activeToken;
 
     private boolean isActive;
+
     public boolean isActive() {
         return isActive;
     }
 
     public void setActive(boolean active) {
         isActive = active;
-    }
-
-    public void setWallets(List<Wallet> wallets) {
-        this.wallets = wallets;
     }
 
     public User() {
