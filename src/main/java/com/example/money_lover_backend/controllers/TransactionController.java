@@ -330,9 +330,9 @@ public class TransactionController {
         Long amount = transaction.getAmount();
         Type categoryType = transaction.getCategory().getType();
 
-        if (categoryType == Type.EXPENSE || categoryType == Type.DEBT) {
+        if (categoryType == Type.EXPENSE || categoryType == Type.LOAN) {
             wallet.setBalance(wallet.getBalance() + amount);
-        } else if (categoryType == Type.INCOME || categoryType == Type.LOAN) {
+        } else if (categoryType == Type.INCOME || categoryType == Type.DEBT) {
             wallet.setBalance(wallet.getBalance() - amount);
         }
 
@@ -359,14 +359,15 @@ public class TransactionController {
         Long amount = transaction.getAmount();
         Type categoryType = transaction.getCategory().getType();
 
-        if (categoryType == Type.EXPENSE || categoryType == Type.DEBT) {
+        if (categoryType == Type.EXPENSE || categoryType == Type.LOAN) {
             wallet.setBalance(wallet.getBalance() + amount);
-        } else if (categoryType == Type.INCOME || categoryType == Type.LOAN) {
+        } else if (categoryType == Type.INCOME || categoryType == Type.DEBT) {
             wallet.setBalance(wallet.getBalance() - amount);
         }
+        walletRepository.save(wallet);
         // Set transaction fields to null
         transaction.setWallet(null);
-        transaction.setAmount(null);
+        transaction.setAmount(0L);
         transaction.setCategory(null);
 
         // Instead of removing transaction, update it
