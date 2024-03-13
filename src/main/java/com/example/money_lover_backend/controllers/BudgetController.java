@@ -107,6 +107,31 @@ public class BudgetController {
         return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping("/user/{user_id}/wallet/{wallet_id}")
+    public ResponseEntity<?> findAll(@PathVariable String user_id,
+                                     @PathVariable String wallet_id) {
+        Optional<User> userOptional = userService.findById(Long.valueOf(user_id));
+        if (userOptional.isPresent()) {
+            //neu wallet_id la all
+            if (wallet_id.equals("all")) {
+                return new ResponseEntity<Iterable<Budget>>(userOptional.get().getBudgets(), HttpStatus.OK);
+            }
+            Optional<Wallet> walletOptional = walletService.getWalletById(Long.valueOf(wallet_id));
+            if (walletOptional.isEmpty()) {
+                return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+            }
+            List<Budget> user_budget = userOptional.get().getBudgets();
+            List<Budget> budgets = new ArrayList<>();
+            for (Budget budget : user_budget) {
+                if (budget.getWallet().equals(walletOptional.get())) {
+                    budgets.add(budget);
+                }
+            }
+            return new ResponseEntity<Iterable<Budget>>(budgets, HttpStatus.OK);
+        }
+        return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+    }
+
 
     //API kiểm tra budget dưới 20%
     @PostMapping("/user/{user_id}/check")

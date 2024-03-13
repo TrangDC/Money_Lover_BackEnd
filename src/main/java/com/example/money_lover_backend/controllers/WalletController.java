@@ -90,12 +90,12 @@ public class WalletController {
     //API gọi 1 ví của 1 user
     @GetMapping("/user/{user_id}/details/{wallet_id}")
     public ResponseEntity<?> getOneWalletByUser(@PathVariable String user_id,
-                                                @PathVariable String wallet_id) {
+                                                @PathVariable Long wallet_id) {
         List<Wallet> wallets = (List<Wallet>) walletService.getAllWalletByUserId(user_id);
         if (wallets.isEmpty()) {
             return new ResponseEntity<String>("User not found", HttpStatus.NOT_FOUND);
         }
-        Optional<Wallet> walletOptional = walletService.getWalletById(Long.valueOf(wallet_id));
+        Optional<Wallet> walletOptional = walletService.getWalletById(wallet_id);
         if (walletOptional.isPresent() && wallets.contains(walletOptional.get())) {
             return new ResponseEntity<Wallet>(walletOptional.get(), HttpStatus.OK);
         }
@@ -127,8 +127,9 @@ public class WalletController {
             return new ResponseEntity<String>("User not found", HttpStatus.NOT_FOUND);
         }
         Optional<Wallet> walletOptional = walletService.getWalletById(Long.valueOf(wallet_id));
-        if (walletOptional.isPresent() && wallets.contains(walletOptional.get())) {
+        if (walletOptional.isPresent()) {
             wallet.setId(walletOptional.get().getId());
+            wallet.setActive(true);
             return new ResponseEntity<Wallet>(walletService.saveWallet(wallet), HttpStatus.OK);
         }
         return new ResponseEntity<>("Wallet not found", HttpStatus.NOT_FOUND);
@@ -144,7 +145,7 @@ public class WalletController {
             return new ResponseEntity<String>("User not found", HttpStatus.NOT_FOUND);
         }
         Optional<Wallet> walletOptional = walletService.getWalletById(Long.valueOf(wallet_id));
-        if (walletOptional.isPresent() && wallets.contains(walletOptional.get())) {
+        if (walletOptional.isPresent()) {
             Long balance = walletOptional.get().getBalance();
             walletOptional.get().setBalance(amount + balance);
             return new ResponseEntity<Wallet>(walletService.saveWallet(walletOptional.get()), HttpStatus.OK);
